@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import MovieList from './components/MovieList';
+import Filter from './components/Filter';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    movies: [
+      {
+        title: 'Movie 1',
+        description: 'Description for Movie 1',
+        posterURL: 'url-to-poster-1',
+        rating: 4.5,
+      },
+      // Add more movies...
+    ],
+    filterTitle: '',
+    filterRate: '',
+  };
+
+  handleFilterTitleChange = (value) => {
+    this.setState({ filterTitle: value });
+  };
+
+  handleFilterRateChange = (value) => {
+    this.setState({ filterRate: value });
+  };
+
+  render() {
+    const { movies, filterTitle, filterRate } = this.state;
+    const filteredMovies = movies.filter(
+      (movie) =>
+        movie.title.toLowerCase().includes(filterTitle.toLowerCase()) &&
+        (!filterRate || movie.rating >= parseFloat(filterRate))
+    );
+
+    return (
+      <div className="app">
+        <Filter
+          filterTitle={filterTitle}
+          filterRate={filterRate}
+          onFilterTitleChange={this.handleFilterTitleChange}
+          onFilterRateChange={this.handleFilterRateChange}
+        />
+        <MovieList movies={filteredMovies} />
+      </div>
+    );
+  }
 }
 
 export default App;
